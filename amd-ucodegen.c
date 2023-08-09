@@ -69,6 +69,11 @@ static void *malloc_nofail(size_t size)
 	return p;
 }
 
+static u16 get_family(u16 proc_id)
+{
+	return ((proc_id >> 12) & 0x0f) + 0x0f;
+}
+
 int validate_mheader(struct microcode_header_amd *h, u16 proc_id)
 {
 	if (proc_id && (proc_id & 0xff00) != (h->processor_rev_id & 0xff00)) {
@@ -166,7 +171,7 @@ int main(int argc, char **argv)
 	if (!outfile) {
 		outfile = malloc_nofail(32);
 		sprintf(outfile, "microcode_amd_fam%02xh.bin",
-			((proc_id >> 12) & 0x0f) + 0x0f);
+			get_family(proc_id));
 	}
 
 	/*
