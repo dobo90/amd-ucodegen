@@ -76,9 +76,9 @@ static u16 get_family(u16 proc_id)
 
 int validate_mheader(struct microcode_header_amd *h, u16 proc_id)
 {
-	if (proc_id && (proc_id & 0xff00) != (h->processor_rev_id & 0xff00)) {
-		fprintf(stderr, "Processor ID mismatch: 0x%x - 0x%x\n", proc_id,
-			h->processor_rev_id);
+	if (proc_id && get_family(proc_id) != get_family(h->processor_rev_id)) {
+		fprintf(stderr, "Processor family mismatch: 0x%x - 0x%x\n",
+			get_family(proc_id), get_family(h->processor_rev_id));
 		return 0;
 	}
 	if (h->processor_rev_id < 0x6000) {
